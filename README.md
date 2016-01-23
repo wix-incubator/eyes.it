@@ -10,7 +10,7 @@ npm install --save-dev eyes.it
 
 ### Usage
 
-Add environment variable with your eyes api key
+Add environment variable with your eyes api key (key here is only example, get your own!):
 ```sh
 export EYES_API_KEY=6QGH9IA5nkK1wRt60I1EWybFMWTJ2R1kcwu07y41lYh0LNWu3r
 ```
