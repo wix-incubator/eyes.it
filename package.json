@@ -7,7 +7,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": ":",
     "release": "wnpm-release --no-shrinkwrap"
   },
   "repository": {
