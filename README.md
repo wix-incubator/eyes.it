@@ -30,3 +30,6 @@ eyes.it('should run tests with eyes', () => {
 In case you require more screenshots in addition to the default ones that happen after browser.get() and at the end of the test, you can always call `eyes.checkWindow(testName);` in your test on your own.
 
 You can also use `eyes.fit` in case you need to use focused tests.
+
+If you do not have `EYES_API_KEY` environment variable, `eyes.it` will behave just like regular `it`.
+

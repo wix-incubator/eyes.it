@@ -6,9 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "publishConfig": {
-    "registry": "http://repo.dev.wix/artifactory/api/npm/npm-local/"
-  },
   "scripts": {
     "build": ":",
     "release": "wnpm-release --no-shrinkwrap"
