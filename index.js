@@ -25,7 +25,7 @@ function eyesWith(fn) {
       var result = hooked.apply(this, arguments);
       result.befores.unshift({fn: function (done) {
         eyesOpen = true;
-        eyes.open(browser, appName, spec.getFullName()).then(done);
+        eyes.open(browser, appName, 'eyes.it ' + spec.getFullName()).then(done);
       }, timeout: () => 30000});
       result.afters.unshift({fn: function (done) {
         eyesOpen = false;
