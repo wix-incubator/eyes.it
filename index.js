@@ -17,6 +17,11 @@ browser.get = function (address) {
   });
 };
 
+function handleError(err, done) {
+  fail(err);
+  done();
+}
+
 function eyesWith(fn) {
   return function () {
     var spec = fn.apply(this, arguments);
@@ -30,7 +35,7 @@ function eyesWith(fn) {
       result.afters.unshift({fn: function (done) {
         eyesOpen = false;
         eyes.checkWindow('end');
-        eyes.close().then(done);
+        eyes.close().then(done).catch(err => handleError(err, done));
       }, timeout: () => 30000});
       return result;
     };
