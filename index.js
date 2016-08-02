@@ -4,7 +4,7 @@
 var path = require('path');
 var Eyes = require('eyes.protractor').Eyes;
 var eyes = new Eyes();
-eyes.defaultWindowSize = {width: 1024, height: 768};
+eyes.defaultWindowSize = null;
 
 var appName = require(path.join(process.cwd(), 'package.json')).name;
 var eyesOpen = false;
@@ -30,7 +30,7 @@ function isPassedWindowSizeArgument(argumentsObj) {
 function eyesWith(fn) {
   return function () {
     var windowSize = eyes.defaultWindowSize;
-    if (isPassedWindowSizeArgument(arguments)) {
+    if(isPassedWindowSizeArgument(arguments)){
       windowSize = arguments[2];
       delete arguments[2];
     }
@@ -40,7 +40,10 @@ function eyesWith(fn) {
       var result = hooked.apply(this, arguments);
       result.befores.unshift({fn: function (done) {
         eyesOpen = true;
-        eyes.open(browser, appName, 'eyes.it ' + spec.getFullName(), windowSize).then(done);
+        if(windowSize)
+          eyes.open(browser, appName, 'eyes.it ' + spec.getFullName(), windowSize).then(done);
+        else
+          eyes.open(browser, appName, 'eyes.it ' + spec.getFullName()).then(done);
       }, timeout: () => 30000});
       result.afters.unshift({fn: function (done) {
         eyesOpen = false;
