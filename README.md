@@ -27,6 +27,34 @@ eyes.it('should run tests with eyes', () => {
 });
 ```
 
+You can set a default window size
+
+```js
+let eyes = require('eyes.it');
+
+eyes.defaultWindowSize = {width: 1024, height: 768};
+
+eyes.it('should run tests with eyes', () => {
+    browser.get('/');
+    $('input').sendKeys('123');
+    $('button').click();
+    expect($('span').text()).toBe('123');
+});
+```
+
+Or set window size for a single spec
+
+```js
+let eyes = require('eyes.it');
+
+eyes.it('should run tests with eyes', () => {
+    browser.get('/');
+    $('input').sendKeys('123');
+    $('button').click();
+    expect($('span').text()).toBe('123');
+}, {width: 1024, height: 768});
+```
+
 In case you require more screenshots in addition to the default ones that happen after browser.get() and at the end of the test, you can always call `eyes.checkWindow(testName);` in your test on your own.
 
 You can also use `eyes.fit` in case you need to use focused tests.
