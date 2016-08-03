@@ -68,7 +68,6 @@ function _init() {
   }
 
   eyes.defaultWindowSize = null;
-  eyes.setSaveNewTests(true);
   eyes.setBatch(appName, process.env.EYES_BATCH_UUID);
 }
 
