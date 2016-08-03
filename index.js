@@ -2,11 +2,16 @@
 'use strict';
 
 var path = require('path');
+var uuid = require('uuid');
 var Eyes = require('eyes.protractor').Eyes;
+var appName = require(path.join(process.cwd(), 'package.json')).name;
+var eyesBatchID = uuid.v4();
 var eyes = new Eyes();
 eyes.defaultWindowSize = null;
 
-var appName = require(path.join(process.cwd(), 'package.json')).name;
+eyes.setSaveNewTests(true);
+eyes.setBatch(appName, eyesBatchID);
+
 var eyesOpen = false;
 var hooked = browser.get;
 browser.get = function (address) {
