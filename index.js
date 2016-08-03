@@ -5,12 +5,7 @@ var path = require('path');
 var uuid = require('uuid');
 var Eyes = require('eyes.protractor').Eyes;
 var appName = require(path.join(process.cwd(), 'package.json')).name;
-var eyesBatchID = uuid.v4();
 var eyes = new Eyes();
-eyes.defaultWindowSize = null;
-
-eyes.setSaveNewTests(true);
-eyes.setBatch(appName, eyesBatchID);
 
 var eyesOpen = false;
 var hooked = browser.get;
@@ -58,6 +53,10 @@ function eyesWith(fn) {
   };
 }
 
+if (!process.env.EYES_BATCH_UUID) {
+  process.env.EYES_BATCH_UUID = uuid.v4();
+}
+
 if (process.env.EYES_API_KEY) {
   eyes.setApiKey(process.env.EYES_API_KEY);
   eyes.it = eyesWith(it);
@@ -66,5 +65,9 @@ if (process.env.EYES_API_KEY) {
   eyes.it = it;
   eyes.fit = fit;
 }
+
+eyes.defaultWindowSize = null;
+eyes.setSaveNewTests(true);
+eyes.setBatch(appName, process.env.EYES_BATCH_UUID);
 
 module.exports = eyes;
