@@ -53,21 +53,25 @@ function eyesWith(fn) {
   };
 }
 
-if (!process.env.EYES_BATCH_UUID) {
-  process.env.EYES_BATCH_UUID = uuid.v4();
+function _init() {
+  if (!process.env.EYES_BATCH_UUID) {
+    process.env.EYES_BATCH_UUID = uuid.v4();
+  }
+
+  if (process.env.EYES_API_KEY) {
+    eyes.setApiKey(process.env.EYES_API_KEY);
+    eyes.it = eyesWith(it);
+    eyes.fit = eyesWith(fit);
+  } else {
+    eyes.it = it;
+    eyes.fit = fit;
+  }
+
+  eyes.defaultWindowSize = null;
+  eyes.setSaveNewTests(true);
+  eyes.setBatch(appName, process.env.EYES_BATCH_UUID);
 }
 
-if (process.env.EYES_API_KEY) {
-  eyes.setApiKey(process.env.EYES_API_KEY);
-  eyes.it = eyesWith(it);
-  eyes.fit = eyesWith(fit);
-} else {
-  eyes.it = it;
-  eyes.fit = fit;
-}
-
-eyes.defaultWindowSize = null;
-eyes.setSaveNewTests(true);
-eyes.setBatch(appName, process.env.EYES_BATCH_UUID);
+_init();
 
 module.exports = eyes;
