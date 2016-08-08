@@ -24,6 +24,7 @@
     "eyes.protractor": "*"
   },
   "devDependencies": {
+    "uuid": "^2.0.2",
     "wnpm-ci": "*"
   }
 }

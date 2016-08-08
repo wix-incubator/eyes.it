@@ -1,4 +1,4 @@
-/* global fit */
+/* global fit it */
 'use strict';
 
 var path = require('path');
@@ -27,6 +27,15 @@ function isPassedWindowSizeArgument(argumentsObj) {
   return typeof argumentsObj[2] === 'object'
 }
 
+function eyesWithout(fn) {
+  return function () {
+    if (isPassedWindowSizeArgument(arguments)) {
+      delete arguments[2];
+    }
+    return fn.apply(this, arguments);
+  }
+}
+
 function eyesWith(fn) {
   return function () {
     var windowSize = eyes.defaultWindowSize;
@@ -53,22 +62,30 @@ function eyesWith(fn) {
   };
 }
 
-function _init() {
-  if (!process.env.EYES_BATCH_UUID) {
-    process.env.EYES_BATCH_UUID = uuid.v4();
+function getBatchUUID() {
+  return process.env.EYES_BATCH_UUID;
+}
+
+function setOnceBatchUUID(uuid) {
+  if (!getBatchUUID()) {
+    process.env.EYES_BATCH_UUID = uuid;
   }
+}
+
+function _init() {
+  setOnceBatchUUID(uuid.v4());
 
   if (process.env.EYES_API_KEY) {
     eyes.setApiKey(process.env.EYES_API_KEY);
     eyes.it = eyesWith(it);
     eyes.fit = eyesWith(fit);
   } else {
-    eyes.it = it;
-    eyes.fit = fit;
+    eyes.it = eyesWithout(it);
+    eyes.fit = eyesWithout(fit);
   }
 
   eyes.defaultWindowSize = null;
-  eyes.setBatch(appName, process.env.EYES_BATCH_UUID);
+  eyes.setBatch(appName, getBatchUUID());
 }
 
 _init();

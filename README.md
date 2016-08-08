@@ -61,3 +61,4 @@ You can also use `eyes.fit` in case you need to use focused tests.
 
 If you do not have `EYES_API_KEY` environment variable, `eyes.it` will behave just like regular `it`.
 
+If you are running with few browser instances, you can get all running tests grouped together by setting `process.env.EYES_BATCH_UUID = require('uuid').v4()'` in your grunt file (or other node process that runs the build), you can also define it as an environment variable (you have to make sure that each run will set a different value to distinguish between runs)
