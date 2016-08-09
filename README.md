@@ -1,6 +1,6 @@
 ### Why do I need this?
 
-Easily integrate protractor with eyes when using jasmine2 as testing framework. All you have to do is use `eyes.it` in your tests instead of `it` and it will run the test with screenshots sent to eyes after each `browser.get()` and at the end of the test.
+Easily integrate protractor with [eyes](https://applitools.com/) when using jasmine2 as testing framework. All you have to do is use `eyes.it` in your tests instead of `it` and it will run the test with screenshots sent to eyes after each `browser.get()` and at the end of the test.
 
 ### Installing
 
