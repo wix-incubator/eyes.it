@@ -17,7 +17,7 @@ export EYES_API_KEY=6QGH9IA5nkK1wRt60I1EWybFMWTJ2R1kcwu07y41lYh0LNWu3r
 
 In your protractor tests:
 ```js
-let eyes = require('eyes.it');
+const eyes = require('eyes.it');
 
 eyes.it('should run tests with eyes', () => {
     browser.get('/');
@@ -30,7 +30,7 @@ eyes.it('should run tests with eyes', () => {
 You can set a default window size
 
 ```js
-let eyes = require('eyes.it');
+const eyes = require('eyes.it');
 
 eyes.defaultWindowSize = {width: 1024, height: 768};
 
@@ -45,7 +45,7 @@ eyes.it('should run tests with eyes', () => {
 Or set window size for a single spec
 
 ```js
-let eyes = require('eyes.it');
+const eyes = require('eyes.it');
 
 eyes.it('should run tests with eyes', () => {
     browser.get('/');
