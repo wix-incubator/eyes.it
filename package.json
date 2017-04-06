@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/wix/eyes.it#readme",
   "dependencies": {
-    "eyes.protractor": "*"
+    "eyes.selenium": "*",
+    "selenium-webdriver": "^3.3.0"
   },
   "devDependencies": {
     "uuid": "^2.0.2",

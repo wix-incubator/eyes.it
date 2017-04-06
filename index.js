@@ -3,7 +3,7 @@
 
 var path = require('path');
 var uuid = require('uuid');
-var Eyes = require('eyes.protractor').Eyes;
+var Eyes = require('eyes.selenium').Eyes;
 var appName = require(path.join(process.cwd(), 'package.json')).name;
 var eyes = new Eyes();
 
