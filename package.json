@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/wix/eyes.it#readme",
   "dependencies": {
-    "eyes.selenium": "*"
+    "eyes.protractor": "*"
   },
   "devDependencies": {
     "uuid": "^2.0.2",
