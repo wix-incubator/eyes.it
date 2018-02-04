@@ -11,10 +11,8 @@ var eyesOpen = false;
 var hooked = browser.get;
 browser.get = function (address) {
   return hooked.apply(this, arguments).then(function (result) {
-    if (eyesOpen) {
-      eyes.checkWindow('get ' + address);
-    }
-    return result;
+    const res = eyesOpen ? eyes.checkWindow('get ' + address) : Promise.resolve();
+    return res.then(() => result);
   });
 };
 
@@ -24,7 +22,7 @@ function handleError(err, done) {
 }
 
 function isPassedWindowSizeArgument(argumentsObj) {
-  return typeof argumentsObj[2] === 'object'
+  return typeof argumentsObj[2] === 'object';
 }
 
 function eyesWithout(fn) {
@@ -33,7 +31,7 @@ function eyesWithout(fn) {
       delete arguments[2];
     }
     return fn.apply(this, arguments);
-  }
+  };
 }
 
 function eyesWith(fn) {
@@ -51,11 +49,16 @@ function eyesWith(fn) {
         eyesOpen = true;
         eyes.open(browser, appName, 'eyes.it ' + spec.getFullName(), windowSize).then(done);
       }, timeout: () => 30000});
-      result.afters.unshift({fn: function (done) {
-        eyesOpen = false;
-        eyes.checkWindow('end');
-        eyes.close().then(done).catch(err => handleError(err, done));
-      }, timeout: () => 30000});
+      result.afters.unshift({fn: function(done) {
+          eyesOpen = false;
+          eyes
+            .checkWindow('end')
+            .then(() => eyes.close())
+            .then(done)
+            .catch(err => handleError(err, done));
+        },
+        timeout: () => 30000
+      });
       return result;
     };
     return spec;
