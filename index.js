@@ -85,7 +85,7 @@ function _init() {
   } else {
     eyes.it = eyesWithout(it);
     eyes.fit = eyesWithout(fit);
-    eyes.checkWindow = ()=> Promise.resolve();
+    eyes.checkWindow = () => Promise.resolve();
   }
 
   eyes.defaultWindowSize = null;
