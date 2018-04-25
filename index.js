@@ -75,28 +75,16 @@ function setOnceBatchUUID(uuid) {
   }
 }
 
-function isMocha() {
-  return typeof fit === 'undefined';
-}
-
 function _init() {
   setOnceBatchUUID(uuid.v4());
 
   if (process.env.EYES_API_KEY) {
     eyes.setApiKey(process.env.EYES_API_KEY);
     eyes.it = eyesWith(it);
-    if (isMocha()) {
-      eyes.it.only = eyesWith(it.only);
-    } else {
-      eyes.fit = eyesWith(fit);
-    }
+    eyes.fit = eyesWith(fit);
   } else {
     eyes.it = eyesWithout(it);
-    if (isMocha()) {
-      eyes.it.only = eyesWithout(it.only);
-    } else {
-      eyes.fit = eyesWithout(fit);
-    }
+    eyes.fit = eyesWithout(fit);
     eyes.checkWindow = () => Promise.resolve();
   }
 
