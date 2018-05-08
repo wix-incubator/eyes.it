@@ -21,33 +21,53 @@ function handleError(err, done) {
   done();
 }
 
-function isPassedWindowSizeArgument(argumentsObj) {
+function isPassedParameterArgument(argumentsObj) {
   return typeof argumentsObj[2] === 'object';
 }
 
 function eyesWithout(fn) {
   return function () {
-    if (isPassedWindowSizeArgument(arguments)) {
+    if (isPassedParameterArgument(arguments)) {
       delete arguments[2];
     }
     return fn.apply(this, arguments);
   };
 }
 
+
+function buildSpecName(spec, version) {
+  var versionDescription = version ? ' version: ' + version : '';
+
+  return 'eyes.it ' + spec.getFullName() + versionDescription;
+}
+
 function eyesWith(fn) {
   return function () {
     var windowSize = eyes.defaultWindowSize;
-    if (isPassedWindowSizeArgument(arguments)) {
-      windowSize = arguments[2];
+    var specVersion;
+
+    if (isPassedParameterArgument(arguments)) {
+      var params = arguments[2];
+      var {width, height, version} = params;
+      // width or height of 0 will make the params window size to be ignored
+      if (params.width && params.height) {
+        windowSize = {width: params.width, height: params.height};
+      }
+
+      if (params.version) {
+        specVersion = params.version;
+      }
+
       delete arguments[2];
     }
+
     var spec = fn.apply(this, arguments);
     var hooked = spec.beforeAndAfterFns;
     spec.beforeAndAfterFns = function () {
       var result = hooked.apply(this, arguments);
       result.befores.unshift({fn: function (done) {
         eyesOpen = true;
-        eyes.open(browser, appName, 'eyes.it ' + spec.getFullName(), windowSize).then(done);
+        eyes.open(browser, appName, buildSpecName(spec, specVersion), windowSize).then(done);
       }, timeout: () => 30000});
       result.afters.unshift({fn: function(done) {
           eyesOpen = false;
