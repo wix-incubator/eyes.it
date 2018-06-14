@@ -48,7 +48,10 @@ function eyesWith(fn) {
 
     if (isPassedParameterArgument(arguments)) {
       var params = arguments[2];
-      var {width, height, version} = params;
+      var width = params.width;
+      var height = params.height;
+      var version = params.version;
+
       // width or height of 0 will make the params window size to be ignored
       if (params.width && params.height) {
         windowSize = {width: params.width, height: params.height};
