@@ -1,6 +1,6 @@
 {
   "name": "eyes.it",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "",
   "main": "dist/src/index.js",
   "files": [
@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/wix/eyes.it#readme",
   "dependencies": {
-    "eyes.selenium": "0.0.81"
+    "eyes.selenium": "0.0.81",
+    "lodash.merge": "^4.6.1"
   },
   "devDependencies": {
     "protractor": "^5.4.1",
