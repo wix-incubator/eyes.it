@@ -1,7 +1,6 @@
 /* global fit it */
 'use strict';
 
-process.env.APPLITOOLS_BATCH_ID = getCommitHash();
 var path = require('path');
 var Eyes = require('eyes.selenium').Eyes;
 var appName = require(path.join(process.cwd(), 'package.json')).name;
@@ -15,20 +14,6 @@ browser.get = function (address) {
     return res.then(() => result);
   });
 };
-
-function getCommitHash () {
-  try {
-    var execSync = require('child_process').execSync;
-    var hash = execSync('git rev-parse --verify HEAD');
-    var parentHashes = execSync(`git rev-list --parents -n 1 ${hash.toString()}`);
-    var hashes = parentHashes.toString().split(' ');
-    var index = hashes.length === 3 ? 2 : 0;
-
-    return hashes[index].trim();
-  } catch (e) {
-    return process.env.BUILD_VCS_NUMBER;
-  }
-}
 
 function handleError(err, done) {
   fail(err);
@@ -103,6 +88,9 @@ function eyesWith(fn) {
 }
 
 function _init() {
+  var batchId = process.env.APPLITOOLS_BATCH_ID;
+  var batchName = batchId ? null : appName;
+
   if (process.env.EYES_API_KEY) {
     eyes.setApiKey(process.env.EYES_API_KEY);
     eyes.it = eyesWith(it);
@@ -114,7 +102,7 @@ function _init() {
   }
 
   eyes.defaultWindowSize = null;
-  eyes.setBatch(null, process.env.APPLITOOLS_BATCH_ID, 0);
+  eyes.setBatch(batchName, batchId, 0);
 }
 
 _init();
