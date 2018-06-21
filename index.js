@@ -68,9 +68,9 @@ function eyesWith(fn) {
     spec.beforeAndAfterFns = function () {
       var result = hooked.apply(this, arguments);
       result.befores.unshift({fn: function (done) {
-          eyesOpen = true;
-          eyes.open(browser, appName, buildSpecName(spec, specVersion), windowSize).then(done);
-        }, timeout: () => 30000});
+        eyesOpen = true;
+        eyes.open(browser, appName, buildSpecName(spec, specVersion), windowSize).then(done);
+      }, timeout: () => 30000});
       result.afters.unshift({fn: function(done) {
           eyesOpen = false;
           eyes
