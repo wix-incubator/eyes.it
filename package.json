@@ -25,6 +25,7 @@
     "eyes.selenium": "*"
   },
   "devDependencies": {
+    "uuid": "^2.0.2",
     "mocha": "^5.2.0",
     "selenium-webdriver": "^2.53.0",
     "wnpm-ci": "*"

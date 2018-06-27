@@ -2,6 +2,7 @@
 'use strict';
 
 var path = require('path');
+var uuid = require('uuid');
 var Eyes = require('eyes.selenium').Eyes;
 var appName = require(path.join(process.cwd(), 'package.json')).name;
 var eyes = new Eyes();
@@ -87,9 +88,25 @@ function eyesWith(fn) {
   };
 }
 
+function getBatchUUID() {
+  return process.env.EYES_BATCH_UUID;
+}
+
+function setOnceBatchUUID(uuid) {
+  if (!getBatchUUID()) {
+    process.env.EYES_BATCH_UUID = uuid;
+  }
+}
+
 function _init() {
-  var batchId = process.env.APPLITOOLS_BATCH_ID;
-  var batchName = batchId ? null : appName;
+  setOnceBatchUUID(uuid.v4());
+  var batchId = getBatchUUID();
+  var batchName = appName;
+
+  if (process.env.APPLITOOLS_BATCH_ID) {
+    batchId = process.env.APPLITOOLS_BATCH_ID;
+    batchName = null;
+  }
 
   if (process.env.EYES_API_KEY) {
     eyes.setApiKey(process.env.EYES_API_KEY);
