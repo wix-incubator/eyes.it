@@ -61,4 +61,16 @@ You can also use `eyes.fit` in case you need to use focused tests.
 
 If you do not have `EYES_API_KEY` environment variable, `eyes.it` will behave just like regular `it`.
 
-If you are running with few browser instances, you can get all running tests grouped together by setting `process.env.EYES_BATCH_UUID = require('uuid').v4()'` in your grunt file (or other node process that runs the build), you can also define it as an environment variable (you have to make sure that each run will set a different value to distinguish between runs)
+You can simulate an Applitools Github integration for pull requests (see [here](https://applitools.com/docs/topics/integrations/github-integration.html])), by adding an `APPLITOOLS_BATCH_ID` environment variable. `APPLITOOLS_BATCH_ID` should be the commit hash of the branch HEAD. This will be set as the batch id of tests.
+
+For instance you can add this to you `package.json`:
+```json
+{
+  "scripts": {
+    "test": "APPLITOOLS_BATCH_ID=<your-HEAD-hash> yoshi test"
+  }
+}
+```
+
+If you are running with few browser instances, you can get all running tests grouped together by setting `process.env.EYES_BATCH_UUID = require('uuid').v4()'` in your grunt file (or other node process that runs the build), you can also define it as an environment variable (you have to make sure that each run will set a different value to distinguish between runs).
+Notice this will not work if you're using the `APPLITOOLS_BATCH_ID` environment variable.

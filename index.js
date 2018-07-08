@@ -100,6 +100,15 @@ function setOnceBatchUUID(uuid) {
 
 function _init() {
   setOnceBatchUUID(uuid.v4());
+  var batchId = getBatchUUID();
+  var batchName = appName;
+  var batchStartAt = undefined;
+
+  if (process.env.APPLITOOLS_BATCH_ID) {
+    batchId = process.env.APPLITOOLS_BATCH_ID;
+    batchName = null;
+    batchStartAt = 0;
+  }
 
   if (process.env.EYES_API_KEY) {
     eyes.setApiKey(process.env.EYES_API_KEY);
@@ -112,7 +121,7 @@ function _init() {
   }
 
   eyes.defaultWindowSize = null;
-  eyes.setBatch(appName, getBatchUUID());
+  eyes.setBatch(batchName, batchId, batchStartAt);
 }
 
 _init();
