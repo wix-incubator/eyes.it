@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/wix/eyes.it#readme",
   "dependencies": {
-    "eyes.selenium": "*"
+    "eyes.selenium": "0.0.81"
   },
   "devDependencies": {
     "uuid": "^2.0.2",
