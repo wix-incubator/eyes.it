@@ -15,50 +15,75 @@ Add environment variable with your eyes api key (key here is only example, get y
 export EYES_API_KEY=6QGH9IA5nkK1wRt60I1EWybFMWTJ2R1kcwu07y41lYh0LNWu3r
 ```
 
+#### Default usage
 In your protractor tests:
 ```js
 const eyes = require('eyes.it');
 
-eyes.it('should run tests with eyes', () => {
-    browser.get('/');
-    $('input').sendKeys('123');
-    $('button').click();
-    expect($('span').text()).toBe('123');
+eyes.it('should run tests with eyes', async () => {
+    await browser.get('/');
+    await $('input').sendKeys('123');
+    await $('button').click();
+    expect(await $('span').text()).toBe('123');
 });
 ```
 
-You can set a default window size
+This will take a 2 snapshots by default:
+ - Immediately After the `browser.get()`
+ - At the end of the test.
+
+#### Configure (disable) default snapshots
+You can disable both default snapshots, and take a snapshot manually using `eyes.checkWindow()`
+```js
+const eyes = require('eyes.it');
+
+eyes.it('should run tests with eyes', async () => {
+    await browser.get('/');
+
+    await $('input').sendKeys('123');
+    await $('button').click();
+    expect(await $('span').text()).toBe('123');
+    await eyes.checkWindow('should be 123');
+
+    await $('input').sendKeys('456');
+    await $('button').click();
+    expect(await $('span').text()).toBe('456');
+    await eyes.checkWindow('should be 456');
+}, {browserGetSnapshotEnabled: false, afterSnapshotEnabled: false});
+```
+
+#### Set default window size
 
 ```js
 const eyes = require('eyes.it');
 
 eyes.defaultWindowSize = {width: 1024, height: 768};
 
-eyes.it('should run tests with eyes', () => {
-    browser.get('/');
-    $('input').sendKeys('123');
-    $('button').click();
-    expect($('span').text()).toBe('123');
+eyes.it('should run tests with eyes', async () => {
+    await browser.get('/');
+    await $('input').sendKeys('123');
+    await $('button').click();
+    expect(await $('span').text()).toBe('123');
 });
 ```
 
-Or set window size for a single spec
+#### Set window size for a single spec
 
 ```js
 const eyes = require('eyes.it');
 
-eyes.it('should run tests with eyes', () => {
-    browser.get('/');
-    $('input').sendKeys('123');
-    $('button').click();
-    expect($('span').text()).toBe('123');
+eyes.it('should run tests with eyes', async () => {
+    await browser.get('/');
+    await $('input').sendKeys('123');
+    await $('button').click();
+    expect(await $('span').text()).toBe('123');
 }, {width: 1024, height: 768});
 ```
 
-In case you require more screenshots in addition to the default ones that happen after browser.get() and at the end of the test, you can always call `eyes.checkWindow(testName);` in your test on your own.
-
+#### Debugging (Focused tests)
 You can also use `eyes.fit` in case you need to use focused tests.
 
+#### Running locally
 If you do not have `EYES_API_KEY` environment variable, `eyes.it` will behave just like regular `it`.
 
 You can simulate an Applitools Github integration for pull requests (see [here](https://applitools.com/docs/topics/integrations/github-integration.html])), by adding an `APPLITOOLS_BATCH_ID` environment variable. `APPLITOOLS_BATCH_ID` should be the commit hash of the branch HEAD. This will be set as the batch id of tests.
