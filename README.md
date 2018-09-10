@@ -19,6 +19,9 @@ In your protractor tests:
 ```js
 const eyes = require('eyes.it');
 
+// or import in TS or JS ES6:
+import eyes from 'eyes.it';
+
 eyes.it('should run tests with eyes', () => {
     browser.get('/');
     $('input').sendKeys('123');
