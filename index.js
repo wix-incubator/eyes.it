@@ -124,6 +124,9 @@ function _init() {
     eyes.it = eyesWithout(it);
     eyes.fit = eyesWithout(fit);
     eyes.checkWindow = () => Promise.resolve();
+    eyes.checkRegionBy = () => Promise.resolve();
+    eyes.checkRegionByElement = () => Promise.resolve();
+    eyes.checkRegion = () => Promise.resolve();
   }
 
   eyes.defaultWindowSize = null;
