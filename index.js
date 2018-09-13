@@ -43,9 +43,6 @@ function eyesWith(fn) {
 
     if (isPassedParameterArgument(arguments)) {
       var params = arguments[2];
-      var width = params.width;
-      var height = params.height;
-      var version = params.version;
       enableSnapshotAtEnd = params.enableSnapshotAtEnd === undefined ? true : params.enableSnapshotAtEnd;
       enableSnapshotAtBrowserGet = params.enableSnapshotAtBrowserGet === undefined ? true : params.enableSnapshotAtBrowserGet;
 
