@@ -7,15 +7,7 @@ var Eyes = require('eyes.selenium').Eyes;
 var appName = require(path.join(process.cwd(), 'package.json')).name;
 var eyes = new Eyes();
 
-var eyesOpen = false;
-var enableSnapshotAtBrowserGet = true;
 var originalBrowserGet = browser.get;
-browser.get = function (address) {
-  return originalBrowserGet.apply(this, arguments).then(function (result) {
-    const res = eyesOpen && enableSnapshotAtBrowserGet ? eyes.checkWindow('get ' + address) : Promise.resolve();
-    return res.then(() => result);
-  });
-};
 
 function handleError(err, done) {
   fail(err);
@@ -47,13 +39,14 @@ function eyesWith(fn) {
     var windowSize = eyes.defaultWindowSize;
     var specVersion;
     var enableSnapshotAtEnd;
+    var enableSnapshotAtBrowserGet;
 
     if (isPassedParameterArgument(arguments)) {
       var params = arguments[2];
       var width = params.width;
       var height = params.height;
       var version = params.version;
-      var enableSnapshotAtEnd = params.enableSnapshotAtEnd === undefined ? true : params.enableSnapshotAtEnd;
+      enableSnapshotAtEnd = params.enableSnapshotAtEnd === undefined ? true : params.enableSnapshotAtEnd;
       enableSnapshotAtBrowserGet = params.enableSnapshotAtBrowserGet === undefined ? true : params.enableSnapshotAtBrowserGet;
 
       // width or height of 0 will make the params window size to be ignored
@@ -66,6 +59,19 @@ function eyesWith(fn) {
       }
 
       delete arguments[2];
+    }
+
+    var eyesOpen = false;
+    
+    if (enableSnapshotAtBrowserGet) {
+      browser.get = function (address) {
+        return originalBrowserGet.apply(this, arguments).then(function (result) {
+          const res = eyesOpen ? eyes.checkWindow('get ' + address) : Promise.resolve();
+          return res.then(() => result);
+        });
+      };
+    } else {
+      browser.get = originalBrowserGet;
     }
 
     var spec = fn.apply(this, arguments);
