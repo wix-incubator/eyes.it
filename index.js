@@ -7,14 +7,7 @@ var Eyes = require('eyes.selenium').Eyes;
 var appName = require(path.join(process.cwd(), 'package.json')).name;
 var eyes = new Eyes();
 
-var eyesOpen = false;
-var hooked = browser.get;
-browser.get = function (address) {
-  return hooked.apply(this, arguments).then(function (result) {
-    const res = eyesOpen ? eyes.checkWindow('get ' + address) : Promise.resolve();
-    return res.then(() => result);
-  });
-};
+var originalBrowserGet = browser.get;
 
 function handleError(err, done) {
   fail(err);
@@ -45,12 +38,13 @@ function eyesWith(fn) {
   return function () {
     var windowSize = eyes.defaultWindowSize;
     var specVersion;
+    var enableSnapshotAtEnd;
+    var enableSnapshotAtBrowserGet;
 
     if (isPassedParameterArgument(arguments)) {
       var params = arguments[2];
-      var width = params.width;
-      var height = params.height;
-      var version = params.version;
+      enableSnapshotAtEnd = params.enableSnapshotAtEnd === undefined ? true : params.enableSnapshotAtEnd;
+      enableSnapshotAtBrowserGet = params.enableSnapshotAtBrowserGet === undefined ? true : params.enableSnapshotAtBrowserGet;
 
       // width or height of 0 will make the params window size to be ignored
       if (params.width && params.height) {
@@ -64,24 +58,45 @@ function eyesWith(fn) {
       delete arguments[2];
     }
 
+    var eyesOpen = false;
+    
+    if (enableSnapshotAtBrowserGet) {
+      browser.get = function (address) {
+        return originalBrowserGet.apply(this, arguments).then(function (result) {
+          const res = eyesOpen ? eyes.checkWindow('get ' + address) : Promise.resolve();
+          return res.then(() => result);
+        });
+      };
+    } else {
+      browser.get = originalBrowserGet;
+    }
+
     var spec = fn.apply(this, arguments);
     var hooked = spec.beforeAndAfterFns;
     spec.beforeAndAfterFns = function () {
       var result = hooked.apply(this, arguments);
-      result.befores.unshift({fn: function (done) {
-        eyesOpen = true;
-        eyes.open(browser, appName, buildSpecName(spec, specVersion), windowSize).then(done);
-      }, timeout: () => 30000});
-      result.afters.unshift({fn: function(done) {
-          eyesOpen = false;
-          eyes
-            .checkWindow('end')
-            .then(() => eyes.close())
-            .then(done)
-            .catch(err => handleError(err, done));
-        },
-        timeout: () => 30000
+      result.befores.unshift({
+        fn: function (done) {
+          eyesOpen = true;
+          eyes.open(browser, appName, buildSpecName(spec, specVersion), windowSize).then(done);
+        }, timeout: () => 30000
       });
+      result.afters.unshift(
+        {
+          fn: function (done) {
+            eyesOpen = false;
+            Promise.resolve()
+              .then(() => {
+                if (enableSnapshotAtEnd) {
+                  return eyes.checkWindow('end');
+                }
+              })
+              .then(() => eyes.close())
+              .then(done)
+              .catch(err => handleError(err, done));
+          },
+          timeout: () => 30000
+        });
       return result;
     };
     return spec;
@@ -118,6 +133,9 @@ function _init() {
     eyes.it = eyesWithout(it);
     eyes.fit = eyesWithout(fit);
     eyes.checkWindow = () => Promise.resolve();
+    eyes.checkRegionBy = () => Promise.resolve();
+    eyes.checkRegionByElement = () => Promise.resolve();
+    eyes.checkRegion = () => Promise.resolve();
   }
 
   eyes.defaultWindowSize = null;
