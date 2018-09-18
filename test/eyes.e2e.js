@@ -2,6 +2,8 @@
  * This is actually not an integration test, it is a unit-test.
  * We only use the e2e suffix so that the default jasmine glob catchs this file.
  */
+
+// Importing `../src/eyes` and not `../src`, since we don't want yet to initialize with `hookEyesIt()`.
 import { eyes } from '../src/eyes';
 import { hookEyesIt } from '../src/eyes-hook';
 
@@ -11,12 +13,13 @@ function log(msg) {
   logs.push(msg);
 }
 
+// Mocking `browser.get` needs to be done before calling `hookEyesIt()`.
 browser.get = () => {
   log('browser_get');
   return Promise.resolve();
 };
 
-// Since we don't have an API_KEY, we need to hook eyes manually
+// Now that `browser.get` is mocked, we can initialize `eyes.it`
 hookEyesIt();
 
 /** Mocks */
