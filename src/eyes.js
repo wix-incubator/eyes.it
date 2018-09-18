@@ -1,27 +1,26 @@
-'use strict';
+const path = require('path');
+const uuid = require('uuid');
+const Eyes = require('eyes.selenium').Eyes;
 
-var path = require('path');
-var uuid = require('uuid');
-var Eyes = require('eyes.selenium').Eyes;
-var appName = require(path.join(process.cwd(), 'package.json')).name;
+const appName = require(path.join(process.cwd(), 'package.json')).name;
 
-var eyes = new Eyes();
+const eyes = new Eyes();
 
 function getBatchUUID() {
   return process.env.EYES_BATCH_UUID;
 }
 
-function setOnceBatchUUID(uuid) {
+function setOnceBatchUUID(_uuid) {
   if (!getBatchUUID()) {
-    process.env.EYES_BATCH_UUID = uuid;
+    process.env.EYES_BATCH_UUID = _uuid;
   }
 }
 
 function _init() {
   setOnceBatchUUID(uuid.v4());
-  var batchId = getBatchUUID();
-  var batchName = appName;
-  var batchStartAt = undefined;
+  let batchId = getBatchUUID();
+  let batchName = appName;
+  let batchStartAt = undefined;
 
   if (process.env.APPLITOOLS_BATCH_ID) {
     batchId = process.env.APPLITOOLS_BATCH_ID;
@@ -40,11 +39,11 @@ function _init() {
     eyes.open = () => Promise.resolve();
     eyes.close = () => Promise.resolve();
   }
-  
+
   eyes.defaultWindowSize = null;
   eyes.setBatch(batchName, batchId, batchStartAt);
 }
 
 _init();
 
-module.exports = {eyes, appName};
+module.exports = { eyes, appName };

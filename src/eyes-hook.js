@@ -1,14 +1,12 @@
-'use strict';
-const merge = require('lodash.merge');
-const {eyes} = require('./eyes');
-const eyesIt = require('./eyes-it.js');
+const { eyes } = require('./eyes');
+const { eyesIt, init } = require('./eyes-it');
 
 function isPassedParameterArgument(argumentsObj) {
   return typeof argumentsObj[2] === 'object';
 }
 
 function eyesWithout(fn) {
-  return function () {
+  return function() {
     if (isPassedParameterArgument(arguments)) {
       delete arguments[2];
     }
@@ -20,13 +18,13 @@ function extractArguments(args) {
   const config = {};
 
   if (isPassedParameterArgument(args)) {
-    var params = args[2];
+    const params = args[2];
 
     // width or height of 0 will make the params window size to be ignored
     if (params.width && params.height) {
-      config.windowSize = {width: params.width, height: params.height};
+      config.windowSize = { width: params.width, height: params.height };
     }
-    
+
     if (params.version) {
       config.specVersion = params.version;
     }
@@ -45,14 +43,15 @@ function extractArguments(args) {
   return config;
 }
 
-function eyesWith(fn, config) {
-  return function () {
+function eyesWith(fn) {
+  return function() {
     const configFromArgs = extractArguments(arguments);
-    return eyesIt(fn, arguments,  merge({}, config, configFromArgs));
+    return eyesIt(fn, arguments, configFromArgs);
   };
 }
 
 function hookEyesIt() {
+  init();
   eyes.it = eyesWith(it);
   eyes.fit = eyesWith(fit);
 }
@@ -65,4 +64,4 @@ function ignoreEyesIt() {
   eyes.fit = eyesWithout(fit);
 }
 
-module.exports = {hookEyesIt, ignoreEyesIt};
+module.exports = { hookEyesIt, ignoreEyesIt };
