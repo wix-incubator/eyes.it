@@ -5,7 +5,7 @@
 
 // Importing `../src/eyes` and not `../src`, since we don't want yet to initialize with `hookEyesIt()`.
 import { eyes } from '../src/eyes';
-import { hookEyesIt } from '../src/eyes-hook';
+import { augmentEyes } from '../src/eyes-augment';
 
 // This log array is filled by the mock functions, and asserted on after each test.
 let logs = [];
@@ -19,8 +19,8 @@ browser.get = () => {
   return Promise.resolve();
 };
 
-// Now that `browser.get` is mocked, we can initialize `eyes.it`
-hookEyesIt();
+// Now that `browser.get` is mocked, we can augment eyes
+augmentEyes();
 
 /** Mocks */
 eyes.open = (browser, appName, specName, windowSize) => {

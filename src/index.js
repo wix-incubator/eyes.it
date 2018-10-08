@@ -1,10 +1,10 @@
 import { eyes } from './eyes';
-import { hookEyesIt, ignoreEyesIt } from './eyes-hook';
+import { augmentEyes, ignoreEyesIt } from './eyes-augment';
 
-const shouldHook = process.env.EYES_API_KEY;
+const shouldAugment = process.env.EYES_API_KEY;
 
-if (shouldHook) {
-  hookEyesIt(browser);
+if (shouldAugment) {
+  augmentEyes();
 } else {
   ignoreEyesIt();
 }

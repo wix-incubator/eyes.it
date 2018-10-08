@@ -50,7 +50,7 @@ function eyesWith(fn) {
   };
 }
 
-function hookEyesIt() {
+function augmentEyes() {
   init();
   eyes.it = eyesWith(it);
   eyes.fit = eyesWith(fit);
@@ -64,4 +64,4 @@ function ignoreEyesIt() {
   eyes.fit = eyesWithout(fit);
 }
 
-module.exports = { hookEyesIt, ignoreEyesIt };
+module.exports = { augmentEyes, ignoreEyesIt };
