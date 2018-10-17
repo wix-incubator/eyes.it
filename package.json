@@ -10,10 +10,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
+    "build": ":",
     "precommit": "lint-staged",
     "pretest": "yoshi build",
     "test": "yoshi test --protractor",
-    "build": "yoshi build",
     "release": "wnpm-release --no-shrinkwrap"
   },
   "repository": {
