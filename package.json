@@ -2,13 +2,18 @@
   "name": "eyes.it",
   "version": "2.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/src/index.js",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": ":",
-    "test": "mocha --require eyes.selenium test/index.test.js",
+    "precommit": "lint-staged",
+    "pretest": "yoshi build",
+    "test": "yoshi test --protractor",
     "release": "wnpm-release --no-shrinkwrap"
   },
   "repository": {
@@ -25,9 +30,21 @@
     "eyes.selenium": "0.0.81"
   },
   "devDependencies": {
-    "uuid": "^2.0.2",
-    "mocha": "^5.2.0",
+    "protractor": "^5.4.1",
     "selenium-webdriver": "^2.53.0",
-    "wnpm-ci": "*"
+    "uuid": "^2.0.2",
+    "wnpm-ci": "*",
+    "yoshi": "^3.7.0"
+  },
+  "lint-staged": {
+    "*.js": "yoshi lint"
+  },
+  "babel": {
+    "presets": [
+      "yoshi"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "yoshi"
   }
 }

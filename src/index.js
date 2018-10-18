@@ -1,17 +1,18 @@
 /* global fit it */
-'use strict';
+const path = require('path');
+const uuid = require('uuid');
+const Eyes = require('eyes.selenium').Eyes;
 
-var path = require('path');
-var uuid = require('uuid');
-var Eyes = require('eyes.selenium').Eyes;
-var appName = require(path.join(process.cwd(), 'package.json')).name;
-var eyes = new Eyes();
+const appName = require(path.join(process.cwd(), 'package.json')).name;
+const eyes = new Eyes();
 
-var eyesOpen = false;
-var hooked = browser.get;
-browser.get = function (address) {
-  return hooked.apply(this, arguments).then(function (result) {
-    const res = eyesOpen ? eyes.checkWindow('get ' + address) : Promise.resolve();
+let eyesOpen = false;
+const originalBrowserGet = browser.get;
+browser.get = function(address) {
+  return originalBrowserGet.apply(this, arguments).then(function(result) {
+    const res = eyesOpen
+      ? eyes.checkWindow('get ' + address)
+      : Promise.resolve();
     return res.then(() => result);
   });
 };
@@ -26,7 +27,7 @@ function isPassedParameterArgument(argumentsObj) {
 }
 
 function eyesWithout(fn) {
-  return function () {
+  return function() {
     if (isPassedParameterArgument(arguments)) {
       delete arguments[2];
     }
@@ -34,27 +35,23 @@ function eyesWithout(fn) {
   };
 }
 
-
 function buildSpecName(spec, version) {
-  var versionDescription = version ? ' version: ' + version : '';
+  const versionDescription = version ? ' version: ' + version : '';
 
   return 'eyes.it ' + spec.getFullName() + versionDescription;
 }
 
 function eyesWith(fn) {
-  return function () {
-    var windowSize = eyes.defaultWindowSize;
-    var specVersion;
+  return function() {
+    let windowSize = eyes.defaultWindowSize;
+    let specVersion;
 
     if (isPassedParameterArgument(arguments)) {
-      var params = arguments[2];
-      var width = params.width;
-      var height = params.height;
-      var version = params.version;
+      const params = arguments[2];
 
       // width or height of 0 will make the params window size to be ignored
       if (params.width && params.height) {
-        windowSize = {width: params.width, height: params.height};
+        windowSize = { width: params.width, height: params.height };
       }
 
       if (params.version) {
@@ -64,15 +61,26 @@ function eyesWith(fn) {
       delete arguments[2];
     }
 
-    var spec = fn.apply(this, arguments);
-    var hooked = spec.beforeAndAfterFns;
-    spec.beforeAndAfterFns = function () {
-      var result = hooked.apply(this, arguments);
-      result.befores.unshift({fn: function (done) {
-        eyesOpen = true;
-        eyes.open(browser, appName, buildSpecName(spec, specVersion), windowSize).then(done);
-      }, timeout: () => 30000});
-      result.afters.unshift({fn: function(done) {
+    const spec = fn.apply(this, arguments);
+    const hooked = spec.beforeAndAfterFns;
+    spec.beforeAndAfterFns = function() {
+      const result = hooked.apply(this, arguments);
+      result.befores.unshift({
+        fn: function(done) {
+          eyesOpen = true;
+          eyes
+            .open(
+              browser,
+              appName,
+              buildSpecName(spec, specVersion),
+              windowSize,
+            )
+            .then(done);
+        },
+        timeout: () => 30000,
+      });
+      result.afters.unshift({
+        fn: function(done) {
           eyesOpen = false;
           eyes
             .checkWindow('end')
@@ -80,7 +88,7 @@ function eyesWith(fn) {
             .then(done)
             .catch(err => handleError(err, done));
         },
-        timeout: () => 30000
+        timeout: () => 30000,
       });
       return result;
     };
@@ -92,17 +100,17 @@ function getBatchUUID() {
   return process.env.EYES_BATCH_UUID;
 }
 
-function setOnceBatchUUID(uuid) {
+function setOnceBatchUUID(batchUuid) {
   if (!getBatchUUID()) {
-    process.env.EYES_BATCH_UUID = uuid;
+    process.env.EYES_BATCH_UUID = batchUuid;
   }
 }
 
 function _init() {
   setOnceBatchUUID(uuid.v4());
-  var batchId = getBatchUUID();
-  var batchName = appName;
-  var batchStartAt = undefined;
+  let batchId = getBatchUUID();
+  let batchName = appName;
+  let batchStartAt = undefined;
 
   if (process.env.APPLITOOLS_BATCH_ID) {
     batchId = process.env.APPLITOOLS_BATCH_ID;
