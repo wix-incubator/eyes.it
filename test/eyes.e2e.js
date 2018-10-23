@@ -14,6 +14,7 @@ function log(msg) {
 }
 
 // Mocking `browser.get` needs to be done before calling `hookEyesIt()`.
+const originalBrowserGet = browser.get;
 browser.get = () => {
   log('browser_get');
   return Promise.resolve();
@@ -23,16 +24,19 @@ browser.get = () => {
 augmentEyes();
 
 /** Mocks */
+const originalEyesOpen = eyes.open;
 eyes.open = (browser, appName, specName, windowSize) => {
   log(`open(${specName})`);
   return Promise.resolve();
 };
 
+const originalEyesCheckWindow = eyes.checkWindow;
 eyes.checkWindow = msg => {
   log(`checkWindow(${msg}}`);
   return Promise.resolve();
 };
 
+const originalEyesClose = eyes.close;
 eyes.close = () => {
   log(`close`);
   return Promise.resolve();
@@ -61,6 +65,13 @@ function finalizeAndExpect(logMatchers) {
 }
 
 describe('eyes.it', () => {
+  afterAll(() => {
+    browser.get = originalBrowserGet;
+    eyes.open = originalEyesOpen;
+    eyes.checkWindow = originalEyesCheckWindow;
+    eyes.close = originalEyesClose;
+  });
+
   describe('should create snapshot at end and browser.get', () => {
     eyes.it('', async () => {
       await browser.get(STUB_URL);
