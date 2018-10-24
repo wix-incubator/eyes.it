@@ -35,7 +35,9 @@ This will take a 2 snapshots by default:
  - At the end of the test.
 
 #### Configure (disable) default snapshots
-You can disable both default snapshots, and take a snapshot manually using `eyes.checkWindow()`
+You can disable both default snapshots, and take a snapshot manually using `eyes.checkWindow()`.
+- Disabling `browser.get` snapshot - usefull when you are getting the same page in multiple tests.
+- Disabling `end` snapshot - When you have multiple `eyes.checkWindow` calls in a test (with propper descriptions), you might want a meaningful description for the last `eyes.checkWindow` call. (The default snapshot's description is simply "end")
 ```js
 const eyes = require('eyes.it');
 
