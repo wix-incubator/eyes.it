@@ -103,3 +103,8 @@ For instance you can add this to you `package.json`:
 
 If you are running with few browser instances, you can get all running tests grouped together by setting `process.env.EYES_BATCH_UUID = require('uuid').v4()'` in your grunt file (or other node process that runs the build), you can also define it as an environment variable (you have to make sure that each run will set a different value to distinguish between runs).
 Notice this will not work if you're using the `APPLITOOLS_BATCH_ID` environment variable.
+
+
+## Useful Links
+
+- Enabling eyes.sdk [verbose logging](https://help.applitools.com/hc/en-us/articles/360006914932-How-can-I-enable-Applitools-Eyes-SDK-traces-logs-)
