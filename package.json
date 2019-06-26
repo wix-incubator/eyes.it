@@ -28,14 +28,14 @@
   "homepage": "https://github.com/wix/eyes.it#readme",
   "dependencies": {
     "eyes.selenium": "^3.8.9",
-    "lodash.merge": "^4.6.1"
+    "lodash.merge": "^4.6.2"
   },
   "devDependencies": {
-    "protractor": "^5.4.1",
-    "selenium-webdriver": "^2.53.0",
-    "uuid": "^2.0.2",
+    "protractor": "^7.0.0",
+    "selenium-webdriver": "^3.6.0",
+    "uuid": "^8.1.0",
     "wnpm-ci": "*",
-    "yoshi": "^3.7.0"
+    "yoshi": "^4.103.2"
   },
   "lint-staged": {
     "*.js": "yoshi lint"
