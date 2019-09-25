@@ -40,6 +40,10 @@ function _init() {
     eyes.close = () => Promise.resolve();
   }
 
+  if (process.env.EYES_API_SERVER_URL) {
+    eyes.setServerUrl(process.env.EYES_API_SERVER_URL);
+  }
+
   eyes.defaultWindowSize = null;
   eyes.setBatch(batchName, batchId, batchStartAt);
 }
