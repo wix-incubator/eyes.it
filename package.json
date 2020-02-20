@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/wix/eyes.it#readme",
   "dependencies": {
-    "eyes.selenium": "0.0.81",
+    "eyes.selenium": "^3.8.9",
     "lodash.merge": "^4.6.1"
   },
   "devDependencies": {
