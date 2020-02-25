@@ -1,5 +1,19 @@
 import eyes from '../src';
+import { MockServer } from './mockServer';
 
 describe('eyes.it', function() {
-  eyes.it('should not throw error', () => {});
+  let server = new MockServer();
+
+  beforeEach(() => {
+    server.start();
+  });
+
+  afterEach(() => {
+    server.stop();
+  });
+
+  eyes.it('should not throw error', async () => {
+    browser.waitForAngularEnabled(false);
+    await browser.get(`${MockServer.URI}/`);
+  });
 });
