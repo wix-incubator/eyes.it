@@ -35,7 +35,7 @@
     "selenium-webdriver": "^3.6.0",
     "uuid": "^8.1.0",
     "wnpm-ci": "*",
-    "yoshi": "^4.87.0"
+    "@wix/yoshi": "^4.87.0"
   },
   "lint-staged": {
     "*.js": "yoshi lint"
