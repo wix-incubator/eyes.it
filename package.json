@@ -20,7 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/wix/eyes.it.git"
   },
-  "author": "Shahar Talmi <shahart@wix.com>",
+  "author": "Shahar Talmi <shahar@wix.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/wix/eyes.it/issues"
